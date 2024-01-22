@@ -1,0 +1,120 @@
+*{
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    text-align: center;
+    background: linear-gradient(45deg, #9b59b6, #8e44ad, #6c3483, #913d88, #9b59b6);
+    background-size: 400% 400%;
+    animation: gradientAnimation 20s infinite;
+    font-family: Arial, Helvetica, sans-serif;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    flex-direction: column;
+    min-height: 100vh;
+  }
+
+  @keyframes gradientAnimation {
+    0% {
+      background-position: 0% 50%;
+    }
+    50% {
+      background-position: 100% 50%;
+    }
+    100% {
+      background-position: 0% 50%;
+    }
+  }
+
+  h1{
+    font-weight: 400;
+    font-size: 60px;
+    color: black;
+    text-shadow:2px 2px 4px #330a43;
+  }
+
+  .container{
+    margin-top: 20px;
+    justify-content: center;
+    display: flex;
+    box-shadow: 0px 0px 10px #9b59b6;
+  }
+
+  .cell{
+    width:50px;
+    height: 50px;
+    text-align: center;
+    font-size: 20px;
+    border: 1px solid #dab8d6;
+    transition: all 0.5s ease-in-out;
+  }
+
+  table{
+    border-collapse: collapse;
+    border: 5px solid #560c79;
+  }
+
+  table tr:nth-child(3n) td,
+  table tr:nth-child(3n+3) td{
+    border-bottom: 3px solid #000;
+  }
+
+  table td:nth-child(3n){
+    border-right: 3px solid #000;
+  }
+
+  input{
+    outline: none;
+  }
+
+  input::-webkit-outer-spin-button,
+  input::-webkit-inner-spin-button{
+     -webkit-appearance: none;
+     margin: 0;
+  }
+
+  button{
+    margin: 20px;
+    padding: 10px 20px;
+    font-size: 16px;
+    color: #fff;
+    border: none;
+    cursor: pointer;
+    border-radius: 5px;
+    transition: all 0.3 ease;
+  }
+
+  #button-resolve,
+#button-reset {
+  padding: 10px 20px;
+  color: white;
+  border: none;
+  cursor: pointer;
+  outline: none;
+  transition: background-color 0.3s ease, transform 0.3s ease;
+}
+
+#button-resolve {
+  background-color: #9459b0;
+}
+
+#button-reset {
+  background-color: #560c79;
+}
+
+#button-resolve:hover {
+  background-color: #dab8d6;
+  transform: scale(1.1) rotate(5deg); /
+}
+
+#button-reset:hover {
+  background-color: #913d88;
+  transform: scale(1.1) rotate(-5deg); 
+}
+
+.inputUser{
+    background-color: #65325f;
+}
