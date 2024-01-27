@@ -17,11 +17,20 @@ document.addEventListener("DOMContentLoaded", function () {
       input.className = "cell";
       input.id = `cell-${row}-${col}`;
 
+      //Validaciones en teimpo real
+      // Validaciones en tiempo real
+      input.addEventListener("input", function (event) {
+        const cellId = event.target.id;
+        const [row, col] = cellId.split("-").slice(1).map(Number);
+        validateInput(event, row, col);
+      });
+
       cell.appendChild(input);
       newRow.appendChild(cell);
     }
     tableSudoku.appendChild(newRow);
   }
+
 
   //Funcionalidad del button reset
   function resetGame() {
@@ -30,10 +39,11 @@ document.addEventListener("DOMContentLoaded", function () {
         const cellId = `cell-${row}-${col}`;
         const cell = document.getElementById(cellId);
         cell.value = "";
-        cell.classList.remove("fillTableEffect, inputUser");
+        cell.classList.remove("inputUser");
       }
     }
   }
+  
 });
 
 async function resolveGame() {
@@ -78,6 +88,32 @@ async function resolveGame() {
   } else {
     alert("No tiene solución, fin del juego.");
   }
+
+  if (isSudokuComplete()) {
+    await Swal.fire({
+      icon: "success",
+      title: "¡Felicidades!",
+      text: "Has completado el Sudoku.",
+      confirmButtonText: "Aceptar",
+    });
+  }
+}
+
+// Función para verificar si el sudoku está completo
+function isSudokuComplete() {
+  for (let row = 0; row < grindLength; row++) {
+    for (let col = 0; col < grindLength; col++) {
+      const cellId = `cell-${row}-${col}`;
+      const cellValue = document.getElementById(cellId).value.trim();
+      if (cellValue === "") {
+        return false; // Si una celda está vacía, el sudoku no está completo
+      }
+    }
+  }
+  return true; // Si todas las celdas están llenas, el sudoku está completo
+  // Dentro de la función resolveGame(), después de llamar a isSudokuComplete():
+console.log("¿El Sudoku está completo?", isSudokuComplete());
+
 }
 
 // Función sudokU resolvente
@@ -134,3 +170,80 @@ function verifyTable(table, row, col, num) {
 function fillTableEffect(ms) {
   return new Promise((resolve) => setTimeout(resolve, ms));
 }
+
+// Funcion validar entrada
+function validateInput(event, row, col) {
+  const cellId = `cell-${row}-${col}`;
+  const cell = document.getElementById(cellId);
+  const value = cell.value;
+
+  // Validacion numero 1-9
+  if (!/^[1-9]$/.test(value)) {
+    // Alerta si el número no es válido
+    Swal.fire({
+      icon: "error",
+      title: "Oops...",
+      text: "El número no es válido, ingrese un número entre 1 y 9",
+      showConfirmButton: false,
+      timer: 2500,
+    });
+    cell.value = "";
+    return;
+  }
+
+  const numberInput = parseInt(value);
+
+  // Verificar si el número existe en la fila
+  for (let i = 0; i < 9; i++) {
+    if (i !== col && document.getElementById(`cell-${row}-${i}`).value == numberInput) {
+      Swal.fire({
+        icon: "error",
+        title: "Oops...",
+        text: `El número ${numberInput} ya existe en la fila`,
+        showConfirmButton: false,
+        timer: 2500,
+      });
+      cell.value = "";
+      return;
+    }
+  }
+
+  // Verificar si el número existe en la columna
+  for (let i = 0; i < 9; i++) {
+    if (i !== row && document.getElementById(`cell-${i}-${col}`).value == numberInput) {
+      Swal.fire({
+        icon: "error",
+        title: "Oops...",
+        text: `El número ${numberInput} ya existe en la columna`,
+        showConfirmButton: false,
+        timer: 2500,
+      });
+      cell.value = "";
+      return;
+    }
+  }
+
+  // Verificar si el número existe en la cuadrícula 3x3
+  const grindRowStart = Math.floor(row / 3) * 3;
+  const grindColStart = Math.floor(col / 3) * 3;
+
+  for (let i = grindRowStart; i < grindRowStart + 3; i++) {
+    for (let j = grindColStart; j < grindColStart + 3; j++) {
+      if (i !== row || j !== col) {
+        if (document.getElementById(`cell-${i}-${j}`).value == numberInput) {
+          Swal.fire({
+            icon: "error",
+            title: "Oops...",
+            text: `El número ${numberInput} ya existe en la cuadrícula 3x3`,
+            showConfirmButton: false,
+            timer: 2500,
+          });
+          cell.value = "";
+          return;
+        }
+      }
+    }
+  }
+}
+
+
